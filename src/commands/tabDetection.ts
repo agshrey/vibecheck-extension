@@ -74,25 +74,6 @@ export function registerTabDetection(context: vscode.ExtensionContext) {
         context.globalState.get<string>("userId") || uuidv4()
       )
     ) {
-      const decoration = vscode.window.createTextEditorDecorationType({
-        after: {
-          contentText: "<-- Similar code detected! bypassed explanation.",
-          margin: "10px",
-          color: "#ffa200ff",
-          fontStyle: "italic",
-        },
-        isWholeLine: true,
-      });
-
-      const range = new vscode.Range(
-        lastInsertedPosition.line,
-        0,
-        lastInsertedPosition.line,
-        0
-      );
-      editor.setDecorations(decoration, [{ range }]);
-      setTimeout(() => editor.setDecorations(decoration, []), 3000);
-
       await saveEmbedding({
         userId: context.globalState.get<string>("userId") || uuidv4(),
         sourceType: "autocomplete",
@@ -116,6 +97,24 @@ export function registerTabDetection(context: vscode.ExtensionContext) {
         deleted: false,
         bypass: true,
       });
+      const decoration = vscode.window.createTextEditorDecorationType({
+        after: {
+          contentText: "<-- Similar code detected! bypassed explanation.",
+          margin: "10px",
+          color: "#ffa200ff",
+          fontStyle: "italic",
+        },
+        isWholeLine: true,
+      });
+
+      const range = new vscode.Range(
+        lastInsertedPosition.line,
+        0,
+        lastInsertedPosition.line,
+        0
+      );
+      editor.setDecorations(decoration, [{ range }]);
+      setTimeout(() => editor.setDecorations(decoration, []), 3000);
 
       return;
     }
@@ -124,6 +123,8 @@ export function registerTabDetection(context: vscode.ExtensionContext) {
       prompt: "Explain the autocompleted code:",
       placeHolder: "Enter your explanation here",
     });
+
+    console.log("Explanation provided:", explanation);
 
     if (!explanation) {
       const insertedLines = lastInsertedText.split("\n");

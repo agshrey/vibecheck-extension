@@ -1,0 +1,232 @@
+[
+  {
+    "name": "Variables",
+    "tags": ["general", "beginner"],
+    "prerequisites": []
+  },
+  {
+    "name": "Data Types",
+    "tags": ["general", "beginner"],
+    "prerequisites": ["Variables"]
+  },
+  {
+    "name": "Control Flow",
+    "tags": ["general", "beginner"],
+    "prerequisites": ["Data Types"]
+  },
+  {
+    "name": "Loops",
+    "tags": ["general", "beginner"],
+    "prerequisites": ["Control Flow"]
+  },
+  {
+    "name": "Functions",
+    "tags": ["general", "beginner"],
+    "prerequisites": ["Variables"]
+  },
+  {
+    "name": "Scope",
+    "tags": ["general", "intermediate"],
+    "prerequisites": ["Functions"]
+  },
+  {
+    "name": "Recursion",
+    "tags": ["general", "intermediate"],
+    "prerequisites": ["Functions", "Call Stack"]
+  },
+  {
+    "name": "Call Stack",
+    "tags": ["general", "intermediate"],
+    "prerequisites": ["Functions"]
+  },
+  {
+    "name": "Arrays",
+    "tags": ["general", "beginner"],
+    "prerequisites": ["Data Types"]
+  },
+  {
+    "name": "Array Methods",
+    "tags": ["JavaScript", "Python", "intermediate"],
+    "prerequisites": ["Arrays", "Functions"]
+  },
+  {
+    "name": "Objects",
+    "tags": ["JavaScript", "intermediate"],
+    "prerequisites": ["Data Types"]
+  },
+  {
+    "name": "Classes",
+    "tags": ["general", "OOP"],
+    "prerequisites": ["Functions", "Objects"]
+  },
+  {
+    "name": "Inheritance",
+    "tags": ["OOP", "advanced"],
+    "prerequisites": ["Classes"]
+  },
+  {
+    "name": "Polymorphism",
+    "tags": ["OOP", "advanced"],
+    "prerequisites": ["Inheritance"]
+  },
+  {
+    "name": "Asynchronous Programming",
+    "tags": ["JavaScript", "Python", "intermediate"],
+    "prerequisites": ["Functions"]
+  },
+  {
+    "name": "Callbacks",
+    "tags": ["JavaScript", "intermediate"],
+    "prerequisites": ["Functions"]
+  },
+  {
+    "name": "Promises",
+    "tags": ["JavaScript", "intermediate"],
+    "prerequisites": ["Callbacks", "Asynchronous Programming"]
+  },
+  {
+    "name": "Async/Await",
+    "tags": ["JavaScript", "intermediate"],
+    "prerequisites": ["Promises"]
+  },
+  {
+    "name": "DOM Manipulation",
+    "tags": ["JavaScript", "frontend"],
+    "prerequisites": ["Functions"]
+  },
+  {
+    "name": "Event Listeners",
+    "tags": ["JavaScript", "frontend"],
+    "prerequisites": ["DOM Manipulation"]
+  },
+  {
+    "name": "Fetch API",
+    "tags": ["JavaScript", "frontend", "API"],
+    "prerequisites": ["Promises", "Async/Await"]
+  },
+  {
+    "name": "React Components",
+    "tags": ["React", "frontend"],
+    "prerequisites": ["Functions", "JSX"]
+  },
+  {
+    "name": "JSX",
+    "tags": ["React", "frontend"],
+    "prerequisites": ["JavaScript"]
+  },
+  {
+    "name": "React Props",
+    "tags": ["React", "frontend"],
+    "prerequisites": ["React Components"]
+  },
+  {
+    "name": "React State",
+    "tags": ["React", "frontend"],
+    "prerequisites": ["React Components"]
+  },
+  {
+    "name": "useEffect",
+    "tags": ["React", "frontend"],
+    "prerequisites": ["React State", "Async/Await"]
+  },
+  {
+    "name": "Hooks",
+    "tags": ["React", "frontend"],
+    "prerequisites": ["React State", "Functions"]
+  },
+  {
+    "name": "Routing",
+    "tags": ["React", "frontend"],
+    "prerequisites": ["React Components"]
+  },
+  {
+    "name": "Node.js Basics",
+    "tags": ["Node.js", "backend"],
+    "prerequisites": ["JavaScript"]
+  },
+  {
+    "name": "Express.js",
+    "tags": ["Node.js", "backend"],
+    "prerequisites": ["Node.js Basics", "Routing"]
+  },
+  {
+    "name": "REST APIs",
+    "tags": ["backend", "API"],
+    "prerequisites": ["Express.js", "HTTP"]
+  },
+  {
+    "name": "Middleware",
+    "tags": ["Express", "backend"],
+    "prerequisites": ["REST APIs"]
+  },
+  {
+    "name": "Databases",
+    "tags": ["backend", "general"],
+    "prerequisites": []
+  },
+  {
+    "name": "SQL Basics",
+    "tags": ["SQL", "backend"],
+    "prerequisites": ["Databases"]
+  },
+  {
+    "name": "SQL Joins",
+    "tags": ["SQL", "backend"],
+    "prerequisites": ["SQL Basics"]
+  },
+  {
+    "name": "ORMs",
+    "tags": ["backend", "database"],
+    "prerequisites": ["SQL Joins"]
+  },
+  {
+    "name": "Authentication",
+    "tags": ["backend", "security"],
+    "prerequisites": ["Express.js", "Databases"]
+  },
+  {
+    "name": "JWT",
+    "tags": ["backend", "security"],
+    "prerequisites": ["Authentication"]
+  },
+  {
+    "name": "Environment Variables",
+    "tags": ["DevOps", "backend"],
+    "prerequisites": []
+  },
+  {
+    "name": "Git Basics",
+    "tags": ["DevOps", "tooling"],
+    "prerequisites": []
+  },
+  {
+    "name": "Branches & Merging",
+    "tags": ["Git", "DevOps"],
+    "prerequisites": ["Git Basics"]
+  },
+  {
+    "name": "CI/CD",
+    "tags": ["DevOps"],
+    "prerequisites": ["Git Basics", "Environment Variables"]
+  },
+  {
+    "name": "Testing Basics",
+    "tags": ["general", "quality"],
+    "prerequisites": ["Functions"]
+  },
+  {
+    "name": "Unit Testing",
+    "tags": ["general", "quality"],
+    "prerequisites": ["Testing Basics"]
+  },
+  {
+    "name": "Integration Testing",
+    "tags": ["general", "quality"],
+    "prerequisites": ["Unit Testing"]
+  },
+  {
+    "name": "Debugging Techniques",
+    "tags": ["general", "tooling"],
+    "prerequisites": ["Functions"]
+  }
+]

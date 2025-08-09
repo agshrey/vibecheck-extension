@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.computeCosineSimilarity = computeCosineSimilarity;
 function computeCosineSimilarity(vecA, vecB) {
-    console.log("jfaodifjaodfj" + vecA.length, vecB.length);
     if (vecA.length !== vecB.length) {
         throw new Error("Vectors must be of the same length");
     }

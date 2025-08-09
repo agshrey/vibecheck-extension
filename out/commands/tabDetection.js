@@ -89,18 +89,6 @@ function registerTabDetection(context) {
             return;
         }
         if (await (0, findSimilarEmbedding_1.findSimilarEmbeddng)(embedding, context.globalState.get("userId") || (0, uuid_1.v4)())) {
-            const decoration = vscode.window.createTextEditorDecorationType({
-                after: {
-                    contentText: "<-- Similar code detected! bypassed explanation.",
-                    margin: "10px",
-                    color: "#ffa200ff",
-                    fontStyle: "italic",
-                },
-                isWholeLine: true,
-            });
-            const range = new vscode.Range(lastInsertedPosition.line, 0, lastInsertedPosition.line, 0);
-            editor.setDecorations(decoration, [{ range }]);
-            setTimeout(() => editor.setDecorations(decoration, []), 3000);
             await (0, saveEmbedding_1.saveEmbedding)({
                 userId: context.globalState.get("userId") || (0, uuid_1.v4)(),
                 sourceType: "autocomplete",
@@ -123,12 +111,25 @@ function registerTabDetection(context) {
                 deleted: false,
                 bypass: true,
             });
+            const decoration = vscode.window.createTextEditorDecorationType({
+                after: {
+                    contentText: "<-- Similar code detected! bypassed explanation.",
+                    margin: "10px",
+                    color: "#ffa200ff",
+                    fontStyle: "italic",
+                },
+                isWholeLine: true,
+            });
+            const range = new vscode.Range(lastInsertedPosition.line, 0, lastInsertedPosition.line, 0);
+            editor.setDecorations(decoration, [{ range }]);
+            setTimeout(() => editor.setDecorations(decoration, []), 3000);
             return;
         }
         const explanation = await vscode.window.showInputBox({
             prompt: "Explain the autocompleted code:",
             placeHolder: "Enter your explanation here",
         });
+        console.log("Explanation provided:", explanation);
         if (!explanation) {
             const insertedLines = lastInsertedText.split("\n");
             const endLine = lastInsertedPosition.line + insertedLines.length - 1;
