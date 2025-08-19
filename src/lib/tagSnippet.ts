@@ -10,7 +10,10 @@ import { supabase } from "../lib/supabase";
 export async function tagSnippet(
   snippet: string,
   userId: string,
-  source: string
+  source: string,
+  filename: string,
+  language: string,
+  filepath: string
 ) {
   const matched: Set<string> = new Set();
 
@@ -42,6 +45,9 @@ export async function tagSnippet(
       user_id: userId,
       source_type: source,
       snippet: snippet,
+      filename: filename,
+      language: language,
+      filepath: filepath,
       tags: Array.from(matched),
     });
   }

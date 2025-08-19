@@ -6,7 +6,7 @@ const getEmbedding_1 = require("../lib/getEmbedding");
 const computeCosineSimilarity_1 = require("../utilities/computeCosineSimilarity");
 const conceptExamples_1 = require("../utilities/conceptExamples");
 const supabase_1 = require("../lib/supabase");
-async function tagSnippet(snippet, userId, source) {
+async function tagSnippet(snippet, userId, source, filename, language, filepath) {
     const matched = new Set();
     for (const [concept, keywords] of Object.entries(conceptKeywordMap_1.conceptKeywordMap)) {
         if (keywords.some((k) => snippet.includes(k))) {
@@ -33,6 +33,9 @@ async function tagSnippet(snippet, userId, source) {
             user_id: userId,
             source_type: source,
             snippet: snippet,
+            filename: filename,
+            language: language,
+            filepath: filepath,
             tags: Array.from(matched),
         });
     }

@@ -43,6 +43,7 @@ const getEmbedding_1 = require("../lib/getEmbedding");
 const saveEmbedding_1 = require("../lib/saveEmbedding");
 const uuid_1 = require("uuid");
 const findSimilarEmbedding_1 = require("../utilities/findSimilarEmbedding");
+const tagSnippet_1 = require("../lib/tagSnippet");
 async function inlinePasteDetection(context) {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
@@ -53,8 +54,8 @@ async function inlinePasteDetection(context) {
     const range = new vscode.Range(lineNumber, 0, lineNumber, 0);
     const clipboardText = await vscode.env.clipboard.readText();
     //not logged in, just paste
-    if (context.globalState.get('loggedIn') !== true) {
-        editor.edit(editBuilder => {
+    if (context.globalState.get("loggedIn") !== true) {
+        editor.edit((editBuilder) => {
             editBuilder.insert(position, clipboardText);
         });
         return;
@@ -72,19 +73,19 @@ async function inlinePasteDetection(context) {
     }
     const embedding_id = (0, uuid_1.v4)();
     //spectator mode bypass
-    if (context.globalState.get('spectatorModeEnabled')) {
-        editor.edit(editBuilder => {
+    if (context.globalState.get("spectatorModeEnabled")) {
+        editor.edit((editBuilder) => {
             editBuilder.insert(position, clipboardText);
         });
         await (0, saveEmbedding_1.saveEmbedding)({
-            userId: context.globalState.get('userId') || (0, uuid_1.v4)(),
+            userId: context.globalState.get("userId") || (0, uuid_1.v4)(),
             sourceType: "paste",
             sourceId: embedding_id,
-            embedding: embedding
+            embedding: embedding,
         });
-        await supabase_1.supabase.from('pastes').insert({
+        await supabase_1.supabase.from("pastes").insert({
             id: embedding_id,
-            user_id: context.globalState.get('userId'),
+            user_id: context.globalState.get("userId"),
             filename: editor.document.fileName,
             filepath: editor.document.uri.fsPath,
             language: editor.document.languageId,
@@ -96,37 +97,37 @@ async function inlinePasteDetection(context) {
             gemini_critique: "",
             gemini_suggestion: "",
             spectator_mode: true,
-            bypassed: false
+            bypassed: false,
         });
         return;
     }
     // similar code bypass
-    if (await (0, findSimilarEmbedding_1.findSimilarEmbeddng)(embedding, context.globalState.get('userId') || (0, uuid_1.v4)())) {
+    if (await (0, findSimilarEmbedding_1.findSimilarEmbeddng)(embedding, context.globalState.get("userId") || (0, uuid_1.v4)())) {
         let decoration = vscode.window.createTextEditorDecorationType({
             after: {
                 contentText: "<-- Similar code detected! bypassed explanation.",
-                margin: '10px',
-                color: '#ffa200ff',
-                fontStyle: 'italic',
+                margin: "10px",
+                color: "#ffa200ff",
+                fontStyle: "italic",
             },
-            isWholeLine: true
+            isWholeLine: true,
         });
         editor.setDecorations(decoration, [{ range }]);
-        editor.edit(editBuilder => {
+        editor.edit((editBuilder) => {
             editBuilder.insert(position, clipboardText);
         });
         setTimeout(() => {
             editor.setDecorations(decoration, []);
         }, 3000);
         await (0, saveEmbedding_1.saveEmbedding)({
-            userId: context.globalState.get('userId') || (0, uuid_1.v4)(),
+            userId: context.globalState.get("userId") || (0, uuid_1.v4)(),
             sourceType: "paste",
             sourceId: embedding_id,
-            embedding: embedding
+            embedding: embedding,
         });
-        await supabase_1.supabase.from('pastes').insert({
+        await supabase_1.supabase.from("pastes").insert({
             id: embedding_id,
-            user_id: context.globalState.get('userId'),
+            user_id: context.globalState.get("userId"),
             filename: editor.document.fileName,
             filepath: editor.document.uri.fsPath,
             language: editor.document.languageId,
@@ -138,7 +139,7 @@ async function inlinePasteDetection(context) {
             gemini_critique: "",
             gemini_suggestion: "",
             spectator_mode: false,
-            bypassed: true
+            bypassed: true,
         });
         return;
     }
@@ -147,18 +148,18 @@ async function inlinePasteDetection(context) {
     let decorationType = vscode.window.createTextEditorDecorationType({
         after: {
             contentText: "<-- Copied code detected!",
-            margin: '10px',
-            color: '#ff0000',
-            fontStyle: 'italic',
+            margin: "10px",
+            color: "#ff0000",
+            fontStyle: "italic",
         },
-        isWholeLine: true
+        isWholeLine: true,
     });
     editor.setDecorations(decorationType, [{ range }]);
     let shouldPaste = false;
     let scoreEmoji = "";
     let parsedFeedback = null;
     do {
-        input = await vscode.window.showInputBox({ prompt: 'Explain the code.' });
+        input = await vscode.window.showInputBox({ prompt: "Explain the code." });
         if (!input) {
             vscode.window.showErrorMessage(`Paste cancelled.`);
             break;
@@ -193,18 +194,19 @@ async function inlinePasteDetection(context) {
             else {
                 const choices = ["Retry", "Cancel"];
                 const selection = await vscode.window.showQuickPick(choices, {
-                    placeHolder: "Would you like to retry or cancel?"
+                    placeHolder: "Would you like to retry or cancel?",
                 });
                 if (selection === "Cancel") {
                     await (0, saveEmbedding_1.saveEmbedding)({
-                        userId: context.globalState.get('userId') || (0, uuid_1.v4)(),
+                        userId: context.globalState.get("userId") || (0, uuid_1.v4)(),
                         sourceType: "paste",
                         sourceId: embedding_id,
-                        embedding: embedding
+                        embedding: embedding,
                     });
-                    await supabase_1.supabase.from('pastes').insert({
+                    (0, tagSnippet_1.tagSnippet)(clipboardText, context.globalState.get("userId") || (0, uuid_1.v4)(), "paste", editor.document.fileName, editor.document.languageId, editor.document.uri.fsPath);
+                    await supabase_1.supabase.from("pastes").insert({
                         id: embedding_id,
-                        user_id: context.globalState.get('userId'),
+                        user_id: context.globalState.get("userId"),
                         filename: editor.document.fileName,
                         filepath: editor.document.uri.fsPath,
                         language: editor.document.languageId,
@@ -216,7 +218,7 @@ async function inlinePasteDetection(context) {
                         gemini_critique: parsedFeedback.critique,
                         gemini_suggestion: parsedFeedback.suggestion,
                         spectator_mode: false,
-                        bypassed: false
+                        bypassed: false,
                     });
                     vscode.window.showErrorMessage("Paste cancelled.");
                     break;
@@ -230,28 +232,31 @@ async function inlinePasteDetection(context) {
     } while (!shouldPaste);
     if (shouldPaste) {
         editor.setDecorations(decorationType, []);
-        editor.edit(editBuilder => {
+        editor.edit((editBuilder) => {
             editBuilder.insert(position, clipboardText);
         });
         decorationType = vscode.window.createTextEditorDecorationType({
             after: {
                 contentText: "<-- Pasted successfully!",
-                margin: '10px',
-                color: '#00ff00',
-                fontStyle: 'italic',
+                margin: "10px",
+                color: "#00ff00",
+                fontStyle: "italic",
             },
-            isWholeLine: true
+            isWholeLine: true,
         });
         editor.setDecorations(decorationType, [{ range }]);
         await (0, saveEmbedding_1.saveEmbedding)({
-            userId: context.globalState.get('userId') || (0, uuid_1.v4)(),
+            userId: context.globalState.get("userId") || (0, uuid_1.v4)(),
             sourceType: "paste",
             sourceId: embedding_id,
-            embedding: embedding
+            embedding: embedding,
         });
-        await supabase_1.supabase.from('pastes').insert({
+        console.log("before tag snippet");
+        (0, tagSnippet_1.tagSnippet)(clipboardText, context.globalState.get("userId") || (0, uuid_1.v4)(), "paste", editor.document.fileName, editor.document.languageId, editor.document.uri.fsPath);
+        console.log("after tag snippet");
+        await supabase_1.supabase.from("pastes").insert({
             id: embedding_id,
-            user_id: context.globalState.get('userId'),
+            user_id: context.globalState.get("userId"),
             filename: editor.document.fileName,
             filepath: editor.document.uri.fsPath,
             language: editor.document.languageId,
@@ -263,7 +268,7 @@ async function inlinePasteDetection(context) {
             gemini_critique: parsedFeedback.critique,
             gemini_suggestion: parsedFeedback.suggestion,
             spectator_mode: false,
-            bypassed: false
+            bypassed: false,
         });
     }
     setTimeout(() => {
