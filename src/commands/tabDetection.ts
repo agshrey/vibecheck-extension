@@ -7,6 +7,7 @@ import { findSimilarEmbeddng } from "../utilities/findSimilarEmbedding";
 import { getEmbedding } from "../lib/getEmbedding";
 import { saveEmbedding } from "../lib/saveEmbedding";
 import { v4 as uuidv4 } from "uuid";
+import { tagSnippet } from "../lib/tagSnippet";
 
 let lastInsertedText: string | null = null;
 let lastInsertedPosition: vscode.Position | null = null;
@@ -124,8 +125,6 @@ export function registerTabDetection(context: vscode.ExtensionContext) {
       placeHolder: "Enter your explanation here",
     });
 
-    console.log("Explanation provided:", explanation);
-
     if (!explanation) {
       const insertedLines = lastInsertedText.split("\n");
       const endLine = lastInsertedPosition.line + insertedLines.length - 1;
@@ -241,14 +240,23 @@ export function registerTabDetection(context: vscode.ExtensionContext) {
 
       editor.setDecorations(decorationType, [{ range }]);
       setTimeout(() => editor.setDecorations(decorationType, []), 3000);
+
+      await saveEmbedding({
+        userId: context.globalState.get<string>("userId") || uuidv4(),
+        sourceType: "autocomplete",
+        sourceId: embedding_id,
+        embedding: embedding,
+      });
     }
 
-    await saveEmbedding({
-      userId: context.globalState.get<string>("userId") || uuidv4(),
-      sourceType: "autocomplete",
-      sourceId: embedding_id,
-      embedding: embedding,
-    });
+    tagSnippet(
+      lastInsertedText,
+      context.globalState.get<string>("userId") || uuidv4(),
+      "autocomplete",
+      editor.document.fileName,
+      editor.document.languageId,
+      editor.document.uri.fsPath
+    );
 
     await supabase.from("autocompletes").insert({
       user_id: context.globalState.get<string>("userId"),

@@ -39,5 +39,16 @@ async function tagSnippet(snippet, userId, source, filename, language, filepath)
             tags: Array.from(matched),
         });
     }
+    for (const concept of Array.from(matched)) {
+        console.log(concept);
+        const { error } = await supabase_1.supabase.rpc("update_user_concept_score", {
+            in_concept: concept,
+            in_delta: -0.05,
+            in_user_id: userId,
+        });
+        if (error) {
+            console.error("Error updating user concept score:", error);
+        }
+    }
 }
 //# sourceMappingURL=tagSnippet.js.map

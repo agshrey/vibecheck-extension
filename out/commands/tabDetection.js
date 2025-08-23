@@ -43,6 +43,7 @@ const findSimilarEmbedding_1 = require("../utilities/findSimilarEmbedding");
 const getEmbedding_1 = require("../lib/getEmbedding");
 const saveEmbedding_1 = require("../lib/saveEmbedding");
 const uuid_1 = require("uuid");
+const tagSnippet_1 = require("../lib/tagSnippet");
 let lastInsertedText = null;
 let lastInsertedPosition = null;
 let lastDocUri = null;
@@ -129,7 +130,6 @@ function registerTabDetection(context) {
             prompt: "Explain the autocompleted code:",
             placeHolder: "Enter your explanation here",
         });
-        console.log("Explanation provided:", explanation);
         if (!explanation) {
             const insertedLines = lastInsertedText.split("\n");
             const endLine = lastInsertedPosition.line + insertedLines.length - 1;
@@ -210,13 +210,14 @@ function registerTabDetection(context) {
             });
             editor.setDecorations(decorationType, [{ range }]);
             setTimeout(() => editor.setDecorations(decorationType, []), 3000);
+            await (0, saveEmbedding_1.saveEmbedding)({
+                userId: context.globalState.get("userId") || (0, uuid_1.v4)(),
+                sourceType: "autocomplete",
+                sourceId: embedding_id,
+                embedding: embedding,
+            });
         }
-        await (0, saveEmbedding_1.saveEmbedding)({
-            userId: context.globalState.get("userId") || (0, uuid_1.v4)(),
-            sourceType: "autocomplete",
-            sourceId: embedding_id,
-            embedding: embedding,
-        });
+        (0, tagSnippet_1.tagSnippet)(lastInsertedText, context.globalState.get("userId") || (0, uuid_1.v4)(), "autocomplete", editor.document.fileName, editor.document.languageId, editor.document.uri.fsPath);
         await supabase_1.supabase.from("autocompletes").insert({
             user_id: context.globalState.get("userId"),
             filename: editor.document.fileName,

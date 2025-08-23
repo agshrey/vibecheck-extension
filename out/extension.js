@@ -44,10 +44,14 @@ const login_1 = require("./commands/login");
 const spectatorMode_1 = require("./commands/spectatorMode");
 const tabDetection_1 = require("./commands/tabDetection");
 const currentTime_1 = require("./commands/currentTime");
+require("dotenv").config();
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 async function activate(context) {
-    context.subscriptions.push(vscode.commands.registerCommand('toolbox.currentTime', currentTime_1.currentTime), vscode.commands.registerCommand('toolbox.login', () => (0, login_1.login)(context)), vscode.commands.registerCommand('toolbox.logout', () => (0, logout_1.logout)(context)), vscode.commands.registerCommand('toolbox.inlinePasteDetection', () => (0, inlinePasteDetection_1.inlinePasteDetection)(context)), vscode.commands.registerCommand('toolbox.spectatorMode', () => (0, spectatorMode_1.spectatorMode)(context)), vscode.commands.registerCommand('toolbox.tabDetection', () => (0, tabDetection_1.registerTabDetection)(context)));
+    console.log(process.env.NEXT_PUBLIC_SUPABASE_URL);
+    console.log(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+    console.log(process.env.GEMINI_API_KEY);
+    context.subscriptions.push(vscode.commands.registerCommand("toolbox.currentTime", currentTime_1.currentTime), vscode.commands.registerCommand("toolbox.login", () => (0, login_1.login)(context)), vscode.commands.registerCommand("toolbox.logout", () => (0, logout_1.logout)(context)), vscode.commands.registerCommand("toolbox.inlinePasteDetection", () => (0, inlinePasteDetection_1.inlinePasteDetection)(context)), vscode.commands.registerCommand("toolbox.spectatorMode", () => (0, spectatorMode_1.spectatorMode)(context)), vscode.commands.registerCommand("toolbox.tabDetection", () => (0, tabDetection_1.registerTabDetection)(context)));
     const output = vscode.window.createOutputChannel("VibeCheck");
     output.show(true);
     output.appendLine(`
@@ -57,15 +61,15 @@ _    ___ __         ________              __
 | |/ / / /_/ /  __/ /___/ / / /  __/ /__/ ,<   
 |___/_/_.___/\\___/\\____/_/ /_/\\___/\\___/_/|_|
 	`);
-    const loggedIn = context.globalState.get('loggedIn');
+    const loggedIn = context.globalState.get("loggedIn");
     if (!loggedIn) {
         await (0, login_1.login)(context);
     }
     else {
-        const storedEmail = context.globalState.get('email');
-        const storedName = context.globalState.get('name');
-        const storedUserId = context.globalState.get('userId');
-        const storedApiKey = context.globalState.get('apiKey');
+        const storedEmail = context.globalState.get("email");
+        const storedName = context.globalState.get("name");
+        const storedUserId = context.globalState.get("userId");
+        const storedApiKey = context.globalState.get("apiKey");
         if (storedEmail && storedName && storedUserId && storedApiKey) {
             vscode.window.showInformationMessage(`Welcome back, ${storedName}! You are logged in as ${storedEmail}.`);
             (0, tabDetection_1.registerTabDetection)(context);

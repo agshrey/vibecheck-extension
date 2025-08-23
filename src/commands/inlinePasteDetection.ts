@@ -205,13 +205,6 @@ export async function inlinePasteDetection(context: vscode.ExtensionContext) {
           placeHolder: "Would you like to retry or cancel?",
         });
         if (selection === "Cancel") {
-          await saveEmbedding({
-            userId: context.globalState.get<string>("userId") || uuidv4(),
-            sourceType: "paste",
-            sourceId: embedding_id,
-            embedding: embedding,
-          });
-
           tagSnippet(
             clipboardText,
             context.globalState.get<string>("userId") || uuidv4(),
@@ -273,8 +266,6 @@ export async function inlinePasteDetection(context: vscode.ExtensionContext) {
       embedding: embedding,
     });
 
-    console.log("before tag snippet");
-
     tagSnippet(
       clipboardText,
       context.globalState.get<string>("userId") || uuidv4(),
@@ -283,8 +274,6 @@ export async function inlinePasteDetection(context: vscode.ExtensionContext) {
       editor.document.languageId,
       editor.document.uri.fsPath
     );
-
-    console.log("after tag snippet");
 
     await supabase.from("pastes").insert({
       id: embedding_id,

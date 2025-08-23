@@ -197,12 +197,6 @@ async function inlinePasteDetection(context) {
                     placeHolder: "Would you like to retry or cancel?",
                 });
                 if (selection === "Cancel") {
-                    await (0, saveEmbedding_1.saveEmbedding)({
-                        userId: context.globalState.get("userId") || (0, uuid_1.v4)(),
-                        sourceType: "paste",
-                        sourceId: embedding_id,
-                        embedding: embedding,
-                    });
                     (0, tagSnippet_1.tagSnippet)(clipboardText, context.globalState.get("userId") || (0, uuid_1.v4)(), "paste", editor.document.fileName, editor.document.languageId, editor.document.uri.fsPath);
                     await supabase_1.supabase.from("pastes").insert({
                         id: embedding_id,
@@ -251,9 +245,7 @@ async function inlinePasteDetection(context) {
             sourceId: embedding_id,
             embedding: embedding,
         });
-        console.log("before tag snippet");
         (0, tagSnippet_1.tagSnippet)(clipboardText, context.globalState.get("userId") || (0, uuid_1.v4)(), "paste", editor.document.fileName, editor.document.languageId, editor.document.uri.fsPath);
-        console.log("after tag snippet");
         await supabase_1.supabase.from("pastes").insert({
             id: embedding_id,
             user_id: context.globalState.get("userId"),
